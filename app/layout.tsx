@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Marianopolis Research Team" }],
   openGraph: {
     title: "Marianopolis Research Team",
-    description: "Exploring. Discovering. Innovating.",
+    description: "Stay curious!",
     type: "website",
   },
 };
