@@ -20,26 +20,26 @@ function MetaballShader() {
         uMousePosition: { value: new THREE.Vector2(0.5, 0.5) },
         uCursorSphere: { value: new THREE.Vector3(0, 0, 0) },
         uCursorRadius: { value: 0.08 },
-        uSphereCount: { value: 5 },
+        uSphereCount: { value: 3 },
         uFixedTopLeftRadius: { value: 0.32 },
         uFixedBottomRightRadius: { value: 0.4 },
         uSmallTopLeftRadius: { value: 0.14 },
         uSmallBottomRightRadius: { value: 0.16 },
         uSmoothness: { value: 0.55 },
-        uAmbientIntensity: { value: 0.12 },
-        uDiffuseIntensity: { value: 0.8 },
-        uSpecularIntensity: { value: 1.0 },
-        uSpecularPower: { value: 8.0 },
-        uFresnelPower: { value: 1.4 },
+        uAmbientIntensity: { value: 0.18 },
+        uDiffuseIntensity: { value: 0.55 },
+        uSpecularIntensity: { value: 0.8 },
+        uSpecularPower: { value: 6.0 },
+        uFresnelPower: { value: 1.2 },
         // Keep shader background slightly dark to avoid washing out with white page
         uBackgroundColor: { value: new THREE.Color(0x0a120a) },
         uSphereColor: { value: new THREE.Color(0x0c2a0c) },
         uLightColor: { value: new THREE.Color(0xa4d4a4) },
         uLightPosition: { value: new THREE.Vector3(0.9, 1.2, 0.7) },
-        uContrast: { value: 1.2 },
-        uFogDensity: { value: 0.02 },
-        uAnimationSpeed: { value: 0.5 },
-        uMovementScale: { value: 0.7 },
+        uContrast: { value: 1.1 },
+        uFogDensity: { value: 0.015 },
+        uAnimationSpeed: { value: 0.4 },
+        uMovementScale: { value: 0.55 },
         uMergeDistance: { value: 1.5 },
         uCursorGlowIntensity: { value: 0.5 },
         uCursorGlowRadius: { value: 0.6 },
@@ -87,7 +87,7 @@ function MetaballShader() {
         varying vec2 vUv;
         
         const float PI = 3.14159265359;
-        const float EPSILON = 0.0025;
+        const float EPSILON = 0.0035;
         const float MAX_DIST = 100.0;
         
         float smin(float a, float b, float k) {
@@ -122,13 +122,13 @@ function MetaballShader() {
           
           float t = uTime * uAnimationSpeed;
           
-          for (int i = 0; i < 10; i++) {
+          for (int i = 0; i < 6; i++) {
             if (i >= uSphereCount) break;
             
             float fi = float(i);
-            float speed = 0.36 + fi * 0.1;
-            float radius = 0.06 + mod(fi, 3.0) * 0.035;
-            float orbitRadius = (0.14 + mod(fi, 3.0) * 0.08) * uMovementScale;
+            float speed = 0.32 + fi * 0.08;
+            float radius = 0.05 + mod(fi, 3.0) * 0.03;
+            float orbitRadius = (0.12 + mod(fi, 3.0) * 0.06) * uMovementScale;
             float phaseOffset = fi * PI * 0.35;
             
             vec3 offset;
@@ -192,34 +192,17 @@ function MetaballShader() {
         }
         
         float ambientOcclusion(vec3 p, vec3 n) {
-          float occ = 0.0;
-          float weight = 1.0;
-          for (int i = 0; i < 3; i++) {
-            float dist = 0.012 + 0.02 * float(i);
-            float h = sceneSDF(p + n * dist);
-            occ += (dist - h) * weight;
-            weight *= 0.82;
-          }
-          return clamp(1.0 - occ, 0.0, 1.0);
+          return 1.0;
         }
         
         float softShadow(vec3 ro, vec3 rd, float mint, float maxt, float k) {
-          float result = 1.0;
-          float t = mint;
-          for (int i = 0; i < 8; i++) {
-            if (t >= maxt) break;
-            float h = sceneSDF(ro + rd * t);
-            if (h < EPSILON) return 0.0;
-            result = min(result, k * h / max(t, 0.001));
-            t += h;
-          }
-          return result;
+          return 1.0;
         }
         
         float rayMarch(vec3 ro, vec3 rd) {
           float t = 0.0;
           
-          for (int i = 0; i < 24; i++) {
+          for (int i = 0; i < 14; i++) {
             vec3 p = ro + rd * t;
             float d = sceneSDF(p);
             
@@ -231,7 +214,7 @@ function MetaballShader() {
               break;
             }
             
-            t += d * 1.05;
+            t += d * 1.1;
           }
           
           return -1.0;
@@ -249,14 +232,12 @@ function MetaballShader() {
           
           float ao = ambientOcclusion(p, normal);
           
-          vec3 ambient = uLightColor * uAmbientIntensity * ao;
+          vec3 ambient = uLightColor * uAmbientIntensity;
           
           vec3 lightDir = normalize(uLightPosition);
           float diff = max(dot(normal, lightDir), 0.0);
           
-          float shadow = softShadow(p, lightDir, 0.01, 10.0, 20.0);
-          
-          vec3 diffuse = uLightColor * diff * uDiffuseIntensity * shadow;
+          vec3 diffuse = uLightColor * diff * uDiffuseIntensity;
           
           vec3 reflectDir = reflect(-lightDir, normal);
           float spec = pow(max(dot(viewDir, reflectDir), 0.0), uSpecularPower);
@@ -264,7 +245,7 @@ function MetaballShader() {
           
           vec3 specular = uLightColor * spec * uSpecularIntensity * fresnel;
           
-          vec3 fresnelRim = uLightColor * fresnel * 0.4;
+          vec3 fresnelRim = uLightColor * fresnel * 0.25;
           
           float distToCursor = length(p - uCursorSphere);
           if (distToCursor < uCursorRadius + 0.4) {
@@ -308,7 +289,7 @@ function MetaballShader() {
           
           if (t > 0.0) {
             float fogAmount = 1.0 - exp(-t * uFogDensity);
-            color = mix(color, uBackgroundColor.rgb, fogAmount * 0.18);
+            color = mix(color, uBackgroundColor.rgb, fogAmount * 0.12);
             
             color += glowContribution * 0.35;
             
@@ -350,14 +331,17 @@ function MetaballShader() {
     const material = meshRef.current.material as THREE.ShaderMaterial;
     
     // Smooth mouse movement
-    mousePosition.current.x += (targetMousePosition.current.x - mousePosition.current.x) * 0.1;
-    mousePosition.current.y += (targetMousePosition.current.y - mousePosition.current.y) * 0.1;
+    mousePosition.current.x += (targetMousePosition.current.x - mousePosition.current.x) * 0.08;
+    mousePosition.current.y += (targetMousePosition.current.y - mousePosition.current.y) * 0.08;
     
     material.uniforms.uTime.value = state.clock.getElapsedTime();
     material.uniforms.uMousePosition.value = mousePosition.current;
     material.uniforms.uCursorSphere.value = cursorSphere3D.current;
     const dpr = gl.getPixelRatio();
     material.uniforms.uResolution.value.set(size.width * dpr, size.height * dpr);
+
+    // Request a render in demand mode
+    state.invalidate();
   });
 
   return (
@@ -391,10 +375,10 @@ export default function MetaballsHero() {
             alpha: true, 
             antialias: true,
             preserveDrawingBuffer: false,
-            powerPreference: 'low-power',
+            powerPreference: 'high-performance',
           }}
           orthographic
-          frameloop="always"
+          frameloop="demand"
           style={{ width: '100%', height: '100%', display: 'block' }}
           dpr={[1, 1.5]}
         >

@@ -55,12 +55,21 @@ const currentExecutives = [
 
 const pastExecutives = [
   {
-    year: "2023-2024",
+    year: "2024-2025",
     members: [
       { name: "Airan Zhang", position: "" },
       { name: "Lauren Engo", position: "" },
       { name: "Nicolas Huni", position: "" },
       { name: "Sabrine Djebbar", position: "" },
+    ],
+  },
+  {
+    year: "2023-2024",
+    members: [
+      { name: "Nathan Vong", position: "" },
+      { name: "Shupeng Liu", position: "" },
+      { name: "Dian Yang Wang", position: "" },
+      { name: "Jess", position: "" },
     ],
   },
   {
