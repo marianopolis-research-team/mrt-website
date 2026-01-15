@@ -1,48 +1,54 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Github, Instagram, Mail, MessageCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Link from "next/link";
+import { Github, Instagram, Mail, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 const socialLinks = [
   {
-    name: 'GitHub',
-    href: 'https://github.com/marianopolis-research-team',
+    name: "GitHub",
+    href: "https://github.com/marianopolis-research-team",
     icon: Github,
-    label: 'Follow us on GitHub',
+    label: "Follow us on GitHub",
   },
   {
-    name: 'Instagram',
-    href: 'https://www.instagram.com/marianopolisresearch/',
+    name: "Instagram",
+    href: "https://www.instagram.com/marianopolisresearch/",
     icon: Instagram,
-    label: 'Follow us on Instagram',
+    label: "Follow us on Instagram",
   },
   {
-    name: 'Discord',
-    href: 'https://discord.gg/qtjTXya5mf',
+    name: "Discord",
+    href: "https://discord.gg/qtjTXya5mf",
     icon: MessageCircle,
-    label: 'Join our Discord server',
+    label: "Join our Discord server",
   },
   {
-    name: 'Email',
-    href: 'mailto:marianopolisresearch@maristudentunion.com',
+    name: "Email",
+    href: "mailto:marianopolisresearch@maristudentunion.com",
     icon: Mail,
-    label: 'Send us an email',
+    label: "Send us an email",
   },
 ];
 
 const footerLinks = {
   explore: [
-    { label: 'Home', href: '/' },
-    { label: 'About Us', href: '/about/' },
-    { label: 'Research', href: '/research/' },
-    { label: 'Archives', href: '/archives/' },
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about/" },
+    { label: "Research", href: "/research/" },
+    { label: "Archives", href: "/archives/" },
   ],
   resources: [
-    { label: 'Apply to Project', href: 'https://docs.google.com/forms/d/e/1FAIpQLSeCi9QrOVWp9tC5Gy3y2mw621uwWzfuUr3HEAW2lFXtQSMzNQ/viewform?usp=dialog' },
-    { label: 'Past Papers', href: '/archives/' },
-    { label: 'GitHub Repos', href: 'https://github.com/marianopolis-research-team' },
+    {
+      label: "Apply to Project",
+      href: "https://docs.google.com/forms/d/e/1FAIpQLSeCi9QrOVWp9tC5Gy3y2mw621uwWzfuUr3HEAW2lFXtQSMzNQ/viewform?usp=dialog",
+    },
+    { label: "Past Papers", href: "/archives/" },
+    {
+      label: "GitHub Repos",
+      href: "https://github.com/marianopolis-research-team",
+    },
   ],
 };
 
@@ -62,7 +68,13 @@ export default function Footer() {
               <h3 className="text-xl font-bold">MRT</h3>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
-              MRT is a club that hopes to foster the development of an interconnected community at Marianopolis focused on scientific innovation and research. Whether it be through open collaboration with other clubs or through interesting seminars and roundtable discussions, we wish to spark interest in young talents across the campus.
+              MRT is a club that hopes to foster the development of an
+              interconnected community at Marianopolis focused on scientific
+              innovation and research. Whether it be through interesting
+              seminars and roundtable discussions or through research projects,
+              we wish to spark interest in young talents across the campus to
+              adorn in <span className="text-xs opacity-50">(hopefully!)</span> ground-breaking research that
+              will tackle issues close to heart!
             </p>
           </div>
 
