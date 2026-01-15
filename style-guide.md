@@ -184,6 +184,7 @@ viewport={{ once: true, margin: "-100px" }}
 
 #### Stagger Children
 ```tsx
+{% raw %}
 // Parent
 variants={{
   hidden: { opacity: 0 },
@@ -192,6 +193,7 @@ variants={{
     transition: { staggerChildren: 0.1 }
   }
 }}
+{% endraw %}
 ```
 
 #### Hover Effects
